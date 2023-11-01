@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # 遍历所有图片
     for test_path in tests_path:
         # 保存结果地址
-        save_res_path = test_path.split('.')[0] + '_res.png'
+        save_res_path = test_path.replace('test', 'res')
         # 读取图片
         img = cv2.imread(test_path)
         # 转为灰度图
