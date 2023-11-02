@@ -46,9 +46,14 @@ class Img_Loader(Dataset):
         image = image.reshape(1, image.shape[0], image.shape[1])
         label = label.reshape(1, label.shape[0], label.shape[1])
         
-        # 反转标签颜色并加深
-        # label = 255 - label
-        label = label * 10
+        # 反转标签颜色, 需要加深特征量, 使其更明显
+        label = 255 - label
+        # 脑室和一部分非脑室的区域有相似的色深, 为了使得标签给出的区域权重加大, 故对其像素值进行缩放
+        label = label * 5
+        
+        # 这里不能删, 删了就不收敛了
+        if label.max() > 1:
+            label = label / 255.0
         
         # 随机增强
         option = random.choice([-1, 0, 1, 2])

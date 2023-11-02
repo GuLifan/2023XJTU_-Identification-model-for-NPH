@@ -164,6 +164,7 @@ resource/
 
 # pridiction result
 data/res/
+data/resx10/
 data/test/
 data/train/tmp/
 

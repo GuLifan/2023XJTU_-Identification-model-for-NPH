@@ -4,6 +4,8 @@ import torch
 import os
 import cv2
 from unet_model import UNet
+
+threshold = 0.5
  
 if __name__ == "__main__":
     # 选择设备，有cuda用cuda，没有就用cpu
@@ -36,8 +38,9 @@ if __name__ == "__main__":
         pred = net(img_tensor)
         # 提取结果
         pred = np.array(pred.data.cpu()[0])[0]
+        print(pred)
         # 处理结果
-        pred[pred >= 0.5] = 255
-        pred[pred < 0.5] = 0
+        pred[pred >= threshold] = 255
+        pred[pred < threshold] = 0
         # 保存图片
         cv2.imwrite(save_res_path, pred)
