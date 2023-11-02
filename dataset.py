@@ -46,9 +46,9 @@ class Img_Loader(Dataset):
         image = image.reshape(1, image.shape[0], image.shape[1])
         label = label.reshape(1, label.shape[0], label.shape[1])
         
-        # 处理标签, 将像素值为255的变为1
-        if label.max() > 1:
-            label = label / 255
+        # 反转标签颜色并加深
+        # label = 255 - label
+        label = label * 10
         
         # 随机增强
         option = random.choice([-1, 0, 1, 2])
@@ -78,3 +78,4 @@ if __name__ == "__main__":
     
     for img, lable in traner_loader:
         print(img.shape)
+        # cv2.imwrite("./data/train/tmp/tmp.png", np.ndarray(lable[0]))

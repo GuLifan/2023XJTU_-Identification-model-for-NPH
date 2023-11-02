@@ -165,8 +165,12 @@ resource/
 # pridiction result
 data/res/
 data/test/
+data/train/tmp/
 
 # output model
 out_model/
 output/
 outputs/
+
+# test scripts
+test.py
