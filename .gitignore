@@ -164,3 +164,8 @@ resource/
 
 # pridiction result
 data/res/
+
+# output model
+out_model/
+output/
+outputs/
