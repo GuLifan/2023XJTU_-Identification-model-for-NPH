@@ -35,7 +35,7 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
             # 选择损失最小的模型保存
             predict = net(img)
             loss = critirion(predict, label)
-            pprint(f"#{epoch} loop. Loss rate: ", loss.item())
+            
             if loss < best_loss:
                 best_loss = loss
                 torch.save(net.state_dict(), output_model)
@@ -43,6 +43,7 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
             # 更新参数
             loss.backward()
             optimizer.step()
+        print(f"#{epoch} loop. Loss rate: ", loss.item())
             
 
 if __name__ == "__main__":
@@ -51,4 +52,4 @@ if __name__ == "__main__":
     net = UNet(n_channels=1, n_classes=1)
     net.to(device)
     
-    train_net(net, device, arg.data_path, arg.output_model, arg.batch_size, arg.epochs, arg.lr)
+    train_net(net, device, arg.data_path, arg.output_path, arg.batch_size, arg.epochs, arg.lr)

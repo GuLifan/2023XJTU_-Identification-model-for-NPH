@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # 将网络拷贝到deivce中
     net.to(device=device)
     # 加载模型参数
-    net.load_state_dict(torch.load('best_model.pth', map_location=device))
+    net.load_state_dict(torch.load('./out_model/unet.pth', map_location=device))
     # 测试模式
     net.eval()
     # 读取所有图片路径

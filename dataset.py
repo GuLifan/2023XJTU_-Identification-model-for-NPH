@@ -3,6 +3,7 @@ import cv2
 import os
 import glob
 import random
+import numpy as np
 from torch.utils.data import Dataset
 
 
@@ -35,6 +36,7 @@ class Img_Loader(Dataset):
         """
         image_path = self.imgs_path[index]
         label_path = image_path.replace("image", "label")
+        label_path = label_path.replace(".jpg", "_label.png")
         image = cv2.imread(image_path)
         label = cv2.imread(label_path)
         
