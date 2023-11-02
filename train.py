@@ -43,7 +43,7 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
             # 更新参数
             loss.backward()
             optimizer.step()
-        print(f"#{epoch} loop. Loss rate: ", loss.item())
+        print(f"#{epoch+1} loop. Loss rate: ", loss.item())
             
 
 if __name__ == "__main__":
