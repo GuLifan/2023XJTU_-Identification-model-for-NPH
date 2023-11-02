@@ -17,7 +17,7 @@ if __name__ == "__main__":
     # 测试模式
     net.eval()
     # 读取所有图片路径
-    tests_path = glob.glob('data/test/*.png')
+    tests_path = glob.glob('data/test/*.jpg')
     # 遍历所有图片
     for test_path in tests_path:
         # 保存结果地址
