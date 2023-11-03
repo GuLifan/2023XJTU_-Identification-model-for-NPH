@@ -26,39 +26,48 @@ output_path = "./output"
 # for predict and eval
 sources_path = glob.glob("data/train/image/*.jpg")
 labels_path = glob.glob("data/train/label/*.png")
-# perflog
-train_perflog = []
-best_record = {"avg_accuracy": 0}
 
 
 def fine_tune():
+    # perflog
+    train_perflog = []
+    best_record = {"avg_accuracy": 0}
     for epochs in range(50, 210, 10):
         for batch_size in range(1, 51):
             for lr in np.arange(0.01, 0.11, 0.01):
                 for scale in range(1, 21):
+                    net = UNet(n_channels=1, n_classes=1, bilinear=True)
+                    net.to(device)
+                    pprint(
+                        f"Train params: epochs={epochs}, batch_size={batch_size}, lr={lr}, scale={scale}"
+                    )
+                    try:
+                        loss = train_net(
+                            net,
+                            device,
+                            data_path,
+                            output_path,
+                            epochs,
+                            batch_size,
+                            lr,
+                            scale,
+                        )
+                    except:
+                        pprint("Train failed")
+                        continue
                     for threshold in np.arange(0.1, 1.1, 0.1):
-                        net = UNet(n_channels=1, n_classes=1, bilinear=True)
-                        net.to(device)
-                        pprint(f"Params: epochs={epochs}, batch_size={batch_size}, lr={lr}, scale={scale}, threshold={threshold}")
+                        pprint(f"|----Predict param: threshold={threshold}")
                         try:
-                            loss = train_net(
-                                net,
-                                device,
-                                data_path,
-                                output_path,
-                                epochs,
-                                batch_size,
-                                lr,
-                                scale,
-                            )
                             predict(net, device, sources_path, threshold)
                             avg_accuracy = eval(sources_path, labels_path)
-                            pprint(f"Result: loss={loss}, accuracy={avg_accuracy}")                            
+                            pprint(
+                                f"|    |----Result: loss={loss}, accuracy={avg_accuracy}"
+                            )
                         except:
-                            pprint("Train failed")
+                            pprint("|    |----Train failed")
                             loss = 1
                             avg_accuracy = 0
-                        
+
                         record = {
                             "epochs": epochs,
                             "batch_size": batch_size,
@@ -68,13 +77,16 @@ def fine_tune():
                             "loss": loss,
                             "avg_accuracy": avg_accuracy,
                         }
-                        del net
                         if record["avg_accuracy"] > best_record["avg_accuracy"]:
                             best_record = record
                         train_perflog.append(record)
-                        
+                    # del net
+
+    json.dump(
+        train_perflog, open("train_perflog.json", "w"), indent=4, ensure_ascii=False
+    )
+    json.dump(best_record, open("best_record.json", "w"), indent=4, ensure_ascii=False)
+
 
 if __name__ == "__main__":
     fine_tune()
-    json.dump(train_perflog, open("train_perflog.json", "w"), indent=4, ensure_ascii=False)
-    json.dump(best_record, open("best_record.json", "w"), indent=4, ensure_ascii=False)
