@@ -32,10 +32,10 @@ best_record = {"avg_accuracy": 0}
 
 
 def fine_tune():
-    for epochs in range(50, 200, 10):
-        for batch_size in range(1, 50):
-            for lr in np.arange(0.01, 0.1, 0.01):
-                for scale in range(1, 20):
+    for epochs in range(50, 210, 10):
+        for batch_size in range(1, 51):
+            for lr in np.arange(0.01, 0.11, 0.01):
+                for scale in range(1, 21):
                     for threshold in np.arange(0.1, 1.1, 0.1):
                         net = UNet(n_channels=1, n_classes=1, bilinear=True)
                         net.to(device)
