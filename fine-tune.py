@@ -65,7 +65,7 @@ def fine_tune():
                                     f"|    |----Result: loss={loss}, accuracy={avg_accuracy}"
                                 )
                             except:
-                                pprint("|    |----Train failed")
+                                pprint("|    |----Predict failed")
                                 loss = 1
                                 avg_accuracy = 0
 
