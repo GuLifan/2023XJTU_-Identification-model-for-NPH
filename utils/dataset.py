@@ -8,9 +8,10 @@ from torch.utils.data import Dataset
 
 
 class Img_Loader(Dataset):
-    def __init__(self, root_dir: str):
+    def __init__(self, root_dir: str, scale: int = 5):
         self.root_dir = root_dir
         self.imgs_path = glob.glob(os.path.join(self.root_dir, "image/*.jpg"))
+        self.scale = scale
  
     def augment(self, image, option: int):
         """使用cv2.flip()进行图像增强
@@ -49,7 +50,7 @@ class Img_Loader(Dataset):
         # 反转标签颜色, 需要加深特征量, 使其更明显
         label = 255 - label
         # 脑室和一部分非脑室的区域有相似的色深, 为了使得标签给出的区域权重加大, 故对其像素值进行缩放
-        label = label * 5
+        label = label * self.scale
         
         # 这里不能删, 删了就不收敛了
         if label.max() > 1:

@@ -8,10 +8,10 @@ from pprint import pprint
 from utils.args import parser
 
 
-def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001):
+def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001, scale=5):
     output_model = os.path.join(output_path, "unet.pth")
     
-    img_dataset = Img_Loader(data_path)
+    img_dataset = Img_Loader(data_path, scale)
     train_loader = torch.utils.data.DataLoader(
         dataset=img_dataset,
         batch_size=batch_size,
