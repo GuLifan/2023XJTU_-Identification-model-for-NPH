@@ -4,6 +4,7 @@ import os
 from unet.unet_model import UNet
 from utils.dataset import Img_Loader
 from torch import optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pprint import pprint
 from utils.args import parser
 
@@ -19,6 +20,7 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
     )
     optimizer = optim.Adam(net.parameters(), lr=lr)
     critirion = nn.BCEWithLogitsLoss() # 试试这个的效果
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
     best_loss = float("inf")
     
     for epoch in range(epochs):
