@@ -6,10 +6,8 @@ import cv2
 from skimage.metrics import structural_similarity as ssim
 from unet.unet_model import UNet
 
-threshold = 0.5
 
-
-def predict(net, device, sources_path):
+def predict(net, device, sources_path, threshold=0.5):
     for test_path in sources_path:
         save_res_path = test_path.replace("train/image", "res")
         # 读取图片
@@ -55,7 +53,7 @@ def eval(sources_path, labels_path):
         pred_path = sources_path[i].replace("train/image", "res")
         sum_acc += tell_diff(label_path, pred_path)
     acc = sum_acc / len(sources_path)
-    print(acc)
+    # print(acc)
     return acc
 
 
