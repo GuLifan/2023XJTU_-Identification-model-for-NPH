@@ -1,11 +1,11 @@
 import torch.nn as nn
 import torch
 import os
-from unet_model import UNet
-from dataset import Img_Loader
+from unet.unet_model import UNet
+from utils.dataset import Img_Loader
 from torch import optim
 from pprint import pprint
-from args import parser
+from utils.args import parser
 
 
 def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001):
