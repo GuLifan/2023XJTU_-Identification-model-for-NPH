@@ -3,27 +3,15 @@ import numpy as np
 import torch
 import os
 import cv2
+from skimage.metrics import structural_similarity as ssim
 from unet_model import UNet
 
 threshold = 0.5
- 
-if __name__ == "__main__":
-    # 选择设备，有cuda用cuda，没有就用cpu
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # 加载网络，图片单通道，分类为1。
-    net = UNet(n_channels=1, n_classes=1)
-    # 将网络拷贝到deivce中
-    net.to(device=device)
-    # 加载模型参数
-    net.load_state_dict(torch.load('./out_model/unet.pth', map_location=device))
-    # 测试模式
-    net.eval()
-    # 读取所有图片路径
-    tests_path = glob.glob('data/test/*.jpg')
-    # 遍历所有图片
-    for test_path in tests_path:
-        # 保存结果地址
-        save_res_path = test_path.replace('test', 'res')
+
+
+def predict(net, device, sources_path):
+    for test_path in sources_path:
+        save_res_path = test_path.replace("train/image", "res")
         # 读取图片
         img = cv2.imread(test_path)
         # 转为灰度图
@@ -38,9 +26,52 @@ if __name__ == "__main__":
         pred = net(img_tensor)
         # 提取结果
         pred = np.array(pred.data.cpu()[0])[0]
-        print(pred)
+        # print(pred)
         # 处理结果
         pred[pred >= threshold] = 255
         pred[pred < threshold] = 0
         # 保存图片
         cv2.imwrite(save_res_path, pred)
+
+
+def tell_diff(label_path, pred_path):
+    label = cv2.imread(label_path)
+    pred = cv2.imread(pred_path)
+
+    label = cv2.cvtColor(label, cv2.COLOR_BGR2GRAY)
+    pred = cv2.cvtColor(pred, cv2.COLOR_BGR2GRAY)
+
+    label = 255 - label
+
+    accuracy = ssim(label, pred)
+
+    return accuracy
+
+
+def eval(sources_path, labels_path):
+    sum_acc = 0
+    for i in range(len(sources_path)):
+        label_path = labels_path[i]
+        pred_path = sources_path[i].replace("train/image", "res")
+        sum_acc += tell_diff(label_path, pred_path)
+    acc = sum_acc / len(sources_path)
+    print(acc)
+    return acc
+
+
+if __name__ == "__main__":
+    # 选择设备，有cuda用cuda，没有就用cpu
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # 加载网络，图片单通道，分类为1。
+    net = UNet(n_channels=1, n_classes=1)
+    # 将网络拷贝到deivce中
+    net.to(device=device)
+    # 加载模型参数
+    net.load_state_dict(torch.load("./out_model/unet.pth", map_location=device))
+    # 测试模式
+    net.eval()
+    # 读取所有图片路径
+    sources_path = glob.glob("data/train/image/*.jpg")
+    labels_path = glob.glob("data/train/label/*.png")
+    predict(net, device, sources_path)
+    eval(sources_path, labels_path)
