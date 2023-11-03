@@ -40,6 +40,10 @@ def tell_diff(label_path, pred_path):
     pred = cv2.cvtColor(pred, cv2.COLOR_BGR2GRAY)
 
     label = 255 - label
+    
+    # 纯色惩罚
+    if pred.max() <= 0 or pred.min() >= 255:
+        return 0
 
     accuracy = ssim(label, pred)
 
