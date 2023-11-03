@@ -7,6 +7,7 @@ from torch import optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pprint import pprint
 from utils.args import parser
+from tqdm import tqdm
 
 
 def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001, scale=5):
@@ -23,7 +24,7 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5)
     best_loss = float("inf")
     
-    for epoch in range(epochs):
+    for epoch in tqdm(range(epochs), desc="Training"):
         # 开启训练模式
         net.train()
         
@@ -45,16 +46,17 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
             # 更新参数
             loss.backward()
             optimizer.step()
-        print(f"#{epoch+1} loop. Loss rate: ", loss.item())
+            scheduler.step(loss)
+        # print(f"#{epoch+1} loop. Loss rate: ", loss.item())
     
-    print(f"\nTraining finished. Best loss: {best_loss}")
+    # print(f"\nTraining finished. Best loss: {best_loss}")
     return best_loss
             
 
 if __name__ == "__main__":
     arg = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    net = UNet(n_channels=1, n_classes=1)
+    net = UNet(n_channels=1, n_classes=1, bilinear=True)
     net.to(device)
     
     train_net(net, device, arg.data_path, arg.output_path, arg.epochs, arg.batch_size, arg.lr)
