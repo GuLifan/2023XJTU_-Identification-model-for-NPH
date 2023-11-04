@@ -30,13 +30,14 @@ labels_path = glob.glob("data/ventricle/train/label/*.png")
 
 def fine_tune():
     # perflog
+    max_batch = 51
     train_perflog = []
     best_record = {"avg_accuracy": 0}
     for bilinear in [True, False]:
         for epochs in range(50, 210, 10):
             for scale in range(1, 21):
                 for lr in np.arange(0.01, 0.11, 0.01):
-                    for batch_size in range(1, 51):
+                    for batch_size in range(1, max_batch):
                         net = UNet(n_channels=1, n_classes=1, bilinear=bilinear)
                         net.to(device)
                         pprint(
@@ -55,8 +56,10 @@ def fine_tune():
                             )
                         except:
                             pprint("Train failed")
-                            continue
-                        for threshold in np.arange(0.1, 1.1, 0.1):
+                            # train失败了大概率是因为爆显存了, 此处调小显存, 直接开始新一轮循环
+                            max_batch = batch_size - 1
+                            break
+                        for threshold in np.arange(0.1, 2.1, 0.1):
                             pprint(f"|----Predict param: threshold={threshold}")
                             try:
                                 predict(net, device, sources_path, threshold)
