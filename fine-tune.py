@@ -33,9 +33,9 @@ def fine_tune():
     max_batch = 51
     train_perflog = []
     best_record = {"avg_accuracy": 0}
-    for epochs in range(50, 210, 10):
+    for epochs in range(50, 310, 10):
         for scale in range(1, 21):
-            for lr in np.arange(0.01, 0.11, 0.01):
+            for lr in np.arange(0.0001, 0.011, 0.0004):
                 for batch_size in range(1, max_batch):
                     net = UNet(n_channels=1, n_classes=1, bilinear=False)
                     net.to(device)
