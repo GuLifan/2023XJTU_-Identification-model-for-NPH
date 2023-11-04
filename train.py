@@ -56,7 +56,8 @@ def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0
 if __name__ == "__main__":
     arg = parser.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    net = UNet(n_channels=1, n_classes=1, bilinear=True)
+    # bilinear需置为False，否则从本地加载模型时会出错
+    net = UNet(n_channels=1, n_classes=1, bilinear=False)
     net.to(device)
     
     train_net(net, device, arg.data_path, arg.output_path, arg.epochs, arg.batch_size, arg.lr)
