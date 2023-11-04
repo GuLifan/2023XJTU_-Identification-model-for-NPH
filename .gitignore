@@ -182,3 +182,6 @@ test.py
 # perflog
 train_perflog.json
 best_record.json
+
+# config file
+config/*.py
