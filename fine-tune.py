@@ -34,9 +34,9 @@ def fine_tune():
     best_record = {"avg_accuracy": 0}
     for bilinear in [True, False]:
         for epochs in range(50, 210, 10):
-            for batch_size in range(1, 51):
+            for scale in range(1, 21):
                 for lr in np.arange(0.01, 0.11, 0.01):
-                    for scale in range(1, 21):
+                    for batch_size in range(1, 51):
                         net = UNet(n_channels=1, n_classes=1, bilinear=bilinear)
                         net.to(device)
                         pprint(
@@ -84,10 +84,10 @@ def fine_tune():
                             train_perflog.append(record)
                         # del net
 
-    json.dump(
-        train_perflog, open("train_perflog.json", "w"), indent=4, ensure_ascii=False
-    )
-    json.dump(best_record, open("best_record.json", "w"), indent=4, ensure_ascii=False)
+                        json.dump(
+                            train_perflog, open("train_perflog.json", "w"), indent=4, ensure_ascii=False
+                        )
+                        json.dump(best_record, open("best_record.json", "w"), indent=4, ensure_ascii=False)
 
 
 if __name__ == "__main__":
