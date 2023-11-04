@@ -21,11 +21,11 @@ import json
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # for train
-data_path = "./data/train"
+data_path = "./data/ventricle/train"
 output_path = "./output"
 # for predict and eval
-sources_path = glob.glob("data/train/image/*.jpg")
-labels_path = glob.glob("data/train/label/*.png")
+sources_path = glob.glob("data/ventricle/train/image/*.jpg")
+labels_path = glob.glob("data/ventricle/train/label/*.png")
 
 
 def fine_tune():

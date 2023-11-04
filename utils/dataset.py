@@ -74,7 +74,7 @@ class Img_Loader(Dataset):
     
     
 if __name__ == "__main__":
-    img_lib = Img_Loader("./data/train")
+    img_lib = Img_Loader("./data/ventricle/train")
     print("Loaded data counts: ", len(img_lib))
     traner_loader = torch.utils.data.DataLoader(
         dataset=img_lib,

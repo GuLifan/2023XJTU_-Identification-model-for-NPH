@@ -5,6 +5,7 @@ import os
 import cv2
 from skimage.metrics import structural_similarity as ssim
 from unet.unet_model import UNet
+from train import CATEGORY
 
 
 def predict(net, device, sources_path, threshold=0.5):
@@ -69,11 +70,11 @@ if __name__ == "__main__":
     # 将网络拷贝到deivce中
     net.to(device=device)
     # 加载模型参数
-    net.load_state_dict(torch.load("./out_model/unet.pth", map_location=device))
+    net.load_state_dict(torch.load(f"./output/unet-{CATEGORY}.pth", map_location=device))
     # 测试模式
     net.eval()
     # 读取所有图片路径
-    sources_path = glob.glob("data/train/image/*.jpg")
-    labels_path = glob.glob("data/train/label/*.png")
+    sources_path = glob.glob("data/ventricle/train/image/*.jpg")
+    labels_path = glob.glob("data/ventricle/train/label/*.png")
     predict(net, device, sources_path)
     eval(sources_path, labels_path)

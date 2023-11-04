@@ -9,9 +9,9 @@ from pprint import pprint
 from utils.args import parser
 from tqdm import tqdm
 
-
+CATEGORY = "ventricle"
 def train_net(net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001, scale=5):
-    output_model = os.path.join(output_path, "unet.pth")
+    output_model = os.path.join(output_path, f"unet-{CATEGORY}.pth")
     
     img_dataset = Img_Loader(data_path, scale)
     train_loader = torch.utils.data.DataLoader(
