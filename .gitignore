@@ -178,3 +178,7 @@ outputs/
 
 # test scripts
 test.py
+
+# perflog
+train_perflog.json
+best_record.json
