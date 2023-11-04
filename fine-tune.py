@@ -11,7 +11,6 @@ from train import train_net
 from predict import predict, eval
 from pprint import pprint
 from unet.unet_model import UNet
-import torch_directml
 import numpy as np
 import torch
 import glob
@@ -19,7 +18,7 @@ import json
 
 
 # shared
-device = torch_directml.device()
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # for train
 data_path = "./data/ventricle/train"
