@@ -5,7 +5,7 @@ import os
 import cv2
 from skimage.metrics import structural_similarity as ssim
 from unet.unet_model import UNet
-from train import CATEGORY
+from config.train_params import CATEGORY
 
 
 def predict(net, device, sources_path, threshold=0.5):
@@ -41,7 +41,7 @@ def tell_diff(label_path, pred_path):
     pred = cv2.cvtColor(pred, cv2.COLOR_BGR2GRAY)
 
     label = 255 - label
-    
+
     # 纯色惩罚
     if pred.max() <= 0 or pred.min() >= 255:
         return 0
@@ -70,11 +70,13 @@ if __name__ == "__main__":
     # 将网络拷贝到deivce中
     net.to(device=device)
     # 加载模型参数
-    net.load_state_dict(torch.load(f"./output/unet-{CATEGORY}.pth", map_location=device))
+    net.load_state_dict(
+        torch.load(f"./output/unet-{CATEGORY}.pth", map_location=device)
+    )
     # 测试模式
     net.eval()
     # 读取所有图片路径
     sources_path = glob.glob("data/ventricle/train/image/*.jpg")
     labels_path = glob.glob("data/ventricle/train/label/*.png")
     predict(net, device, sources_path)
-    eval(sources_path, labels_path)
+    print("avg_accuracy", eval(sources_path, labels_path))
