@@ -24,7 +24,7 @@ def train_net(
     )
     optimizer = optim.Adam(net.parameters(), lr=lr)
     critirion = nn.BCEWithLogitsLoss()  # 试试这个的效果
-    # scheduler = ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=5)
+    # scheduler = ReduceLROnPlateau(optimizer, mode="min", factor=0.8, patience=5)
     best_loss = float("inf")
 
     for epoch in tqdm(range(epochs), desc="Training"):
@@ -53,7 +53,7 @@ def train_net(
         # print(f"#{epoch+1} loop. Loss rate: ", loss.item())
 
     # print(f"\nTraining finished. Best loss: {best_loss}")
-    return best_loss
+    return best_loss.item()
 
 
 if __name__ == "__main__":
