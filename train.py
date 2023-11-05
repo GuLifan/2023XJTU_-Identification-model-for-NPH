@@ -63,13 +63,15 @@ if __name__ == "__main__":
     net = UNet(n_channels=1, n_classes=1, bilinear=False)
     net.to(device)
 
-    train_net(
-        net,
-        device,
-        arg.data_path,
-        arg.output_path,
-        arg.epochs,
-        arg.batch_size,
-        arg.lr,
-        arg.scale,
+    print(
+        train_net(
+            net,
+            device,
+            arg.data_path,
+            arg.output_path,
+            arg.epochs,
+            arg.batch_size,
+            arg.lr,
+            arg.scale,
+        )
     )
