@@ -5,6 +5,7 @@ import os
 import cv2
 from skimage.metrics import structural_similarity as ssim
 from unet.unet_model import UNet
+from utils.args import parser
 from config.train_params import CATEGORY
 
 
@@ -63,6 +64,7 @@ def eval(sources_path, labels_path):
 
 
 if __name__ == "__main__":
+    arg = parser.parse_args()
     # 选择设备，有cuda用cuda，没有就用cpu
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # 加载网络，图片单通道，分类为1。
@@ -71,7 +73,7 @@ if __name__ == "__main__":
     net.to(device=device)
     # 加载模型参数
     net.load_state_dict(
-        torch.load(f"./output/unet-{CATEGORY}.pth", map_location=device)
+        torch.load(f"./output/{arg.model_type}-{CATEGORY}.pth", map_location=device)
     )
     # 测试模式
     net.eval()

@@ -12,9 +12,17 @@ from config.train_params import CATEGORY
 
 
 def train_net(
-    net, device, data_path, output_path, epochs=50, batch_size=1, lr=0.001, scale=5
+    net,
+    device,
+    data_path,
+    output_path,
+    epochs=50,
+    batch_size=1,
+    lr=0.001,
+    scale=5,
+    model_type="unet",
 ):
-    output_model = os.path.join(output_path, f"unet-{CATEGORY}.pth")
+    output_model = os.path.join(output_path, f"{model_type}-{CATEGORY}.pth")
 
     img_dataset = Img_Loader(data_path, scale)
     train_loader = torch.utils.data.DataLoader(
@@ -65,13 +73,14 @@ if __name__ == "__main__":
 
     print(
         train_net(
-            net,
-            device,
-            arg.data_path,
-            arg.output_path,
-            arg.epochs,
-            arg.batch_size,
-            arg.lr,
-            arg.scale,
+            net=net,
+            device=device,
+            data_path=arg.data_path,
+            output_path=arg.output_path,
+            epochs=arg.epochs,
+            batch_size=arg.batch_size,
+            lr=arg.lr,
+            scale=arg.scale,
+            model_type=arg.model_type
         )
     )
