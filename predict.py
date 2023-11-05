@@ -43,7 +43,9 @@ def tell_diff(label_path, pred_path):
 
     label = 255 - label
 
-    # 纯色惩罚
+    # 纯色惩罚, 仅当标签纯色时返回1, 仅当结果纯色时返回0
+    if label.max() <= 0 or label.min() >= 255:
+        return 1
     if pred.max() <= 0 or pred.min() >= 255:
         return 0
 
