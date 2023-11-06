@@ -35,7 +35,7 @@ def train_net(
     # scheduler = ReduceLROnPlateau(optimizer, mode="min", factor=0.8, patience=5)
     best_loss = float("inf")
 
-    for epoch in tqdm(range(epochs), desc="Training"):
+    for epoch in tqdm(range(epochs), desc="Training", unit="epoch", colour="blue"):
         # 开启训练模式
         net.train()
 
