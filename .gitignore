@@ -163,18 +163,19 @@ cython_debug/
 resource/
 
 # pridiction result
-data/ventricle/res/
-data/ventricle/resx10/
+data/ventricle/res/*.jpg
+data/ventricle/res/*.png
 data/ventricle/test/
 data/ventricle/train/tmp/
-data/skull/res
-data/skull/test
+data/skull/res/*.png
+data/skull/res/*.jpg
+data/skull/test/
 data/skull/train/tmp/
 
 # output model
-out_model/
-output/
-outputs/
+out_model/*.pth
+output/*.pth
+outputs/*.pth
 
 # test scripts
 test.py
