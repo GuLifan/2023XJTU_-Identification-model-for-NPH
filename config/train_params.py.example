@@ -1,5 +1,7 @@
 CATEGORY = "ventricle"
 
+MODEL_TYPE = "unet"
+
 EPOCHS = 100
 
 BATCH_SIZE = 20
