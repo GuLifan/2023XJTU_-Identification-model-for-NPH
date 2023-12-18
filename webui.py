@@ -15,6 +15,11 @@ ventricle_unet.load_state_dict(
 )
 ventricle_unet.eval()
 
+skull_unet = UNet(n_channels=1, n_classes=1)
+skull_unet.to(device=device)
+skull_unet.load_state_dict(torch.load(f"./output/unet-skull.pth", map_location=device))
+skull_unet.eval()
+
 
 def visualize_percentage(percentage):
     # 创建一个新的Matplotlib图形
@@ -65,12 +70,12 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     ventricle_image = ventricle_image.convert("RGB")
 
     # 识别颅骨
-    # skull_img = skull_unet(img_tensor)
-    # skull_img = np.array(skull_img.data.cpu()[0])[0]
-    # skull_img[skull_img >= THRESHOLD] = 255
-    # skull_img[skull_img < THRESHOLD] = 0
-    # skull_image = Image.fromarray(skull_img)
-    # skull_image = skull_image.convert("RGB")
+    skull_img = skull_unet(img_tensor)
+    skull_img = np.array(skull_img.data.cpu()[0])[0]
+    skull_img[skull_img >= THRESHOLD] = 255
+    skull_img[skull_img < THRESHOLD] = 0
+    skull_image = Image.fromarray(skull_img)
+    skull_image = skull_image.convert("RGB")
 
     ill_percent = tell_ill(ventricle_img, ventricle_img)
     # percent_image = visualize_percentage(ill_percent)
@@ -80,6 +85,7 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     # 将输出图像染色
     width, height = ventricle_image.size
     # 遍历图像的每个像素
+    # ventricle
     for x in range(width):
         for y in range(height):
             # 获取像素的RGB值
@@ -87,12 +93,20 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
             # 如果像素是黑色，则将其改为指示色
             if r == 0 and g == 0 and b == 0:
                 ventricle_image.putpixel((x, y), indicator)
+    # skull            
+    for x in range(width):
+        for y in range(height):
+            # 获取像素的RGB值
+            r, g, b = skull_image.getpixel((x, y))
+            # 如果像素是黑色，则将其改为指示色
+            if r == 0 and g == 0 and b == 0:
+                skull_image.putpixel((x, y), indicator)
     print("******染色成功******")
     # 叠加
     ventricle_image.paste(original_image, (0, 0), original_image)
-    # original_image2.paste(skull_image, (0, 0), skull_image)
+    skull_image.paste(original_image, (0, 0), original_image)
     print("******叠加成功******")
-    return ventricle_image, ventricle_image, dagnosis
+    return ventricle_image, skull_image, dagnosis
 
 
 with gr.Blocks() as demo:
