@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # 测试模式
     net.eval()
     # 读取所有图片路径
-    sources_path = glob.glob("data/ventricle/train/image/*.jpg")
-    labels_path = glob.glob("data/ventricle/train/label/*.png")
+    sources_path = glob.glob(f"data/{CATEGORY}/train/image/*.jpg")
+    labels_path = glob.glob(f"data/{CATEGORY}/train/label/*.png")
     predict(net, device, sources_path)
     print("avg_accuracy", eval(sources_path, labels_path))
