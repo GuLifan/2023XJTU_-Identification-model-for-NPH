@@ -1,0 +1,17 @@
+CATEGORY = "ventricle"
+
+MODEL_TYPE = "unet"
+
+EPOCHS = 100
+
+BATCH_SIZE = 20
+
+LR = 0.1
+
+SCALE = 5
+
+DATA_PATH = f"./data/{CATEGORY}/train"
+
+OUTPUT_PATH = "./output"
+
+THRESHOLD = 0.5

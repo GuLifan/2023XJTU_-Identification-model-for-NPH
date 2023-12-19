@@ -161,3 +161,28 @@ cython_debug/
 
 # resource
 resource/
+
+# pridiction result
+data/ventricle/res/*.jpg
+data/ventricle/res/*.png
+data/ventricle/test/
+data/ventricle/train/tmp/
+data/skull/res/*.png
+data/skull/res/*.jpg
+data/skull/test/
+data/skull/train/tmp/
+
+# output model
+out_model/*.pth
+output/*.pth
+outputs/*.pth
+
+# test scripts
+test.py
+
+# perflog
+train_perflog.json
+best_record.json
+
+# config file
+config/*.py
