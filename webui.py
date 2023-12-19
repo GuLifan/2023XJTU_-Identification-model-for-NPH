@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from unet.unet_model import UNet
 from config.train_params import THRESHOLD
+from utils.doctor import tell_evans, doctor
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ventricle_unet = UNet(n_channels=1, n_classes=1)
@@ -77,10 +78,15 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     skull_image = Image.fromarray(skull_img)
     skull_image = skull_image.convert("RGB")
 
+    # 完成诊断函数后把下面这段删掉
     ill_percent = tell_ill(ventricle_img, ventricle_img)
-    # percent_image = visualize_percentage(ill_percent)
-    dagnosis = tell_diagnosis(ill_percent)
-    indicator = (0, 255, 0) if ill_percent > 0.5 else (255, 0, 0)  # 绿色健康, 红色有病
+    diagnosis = tell_diagnosis(ill_percent)
+    indicator = (0, 255, 0) if ill_percent < 0.5 else (255, 0, 0)  # 绿色健康, 红色有病
+    
+    # 完成诊断函数后取消下面这段的注释
+    # evans_index = tell_evans(ventricle_img, skull_img)
+    # ill, diagnosis = doctor(evans_index, input_age, input_BMI, input_gender)
+    # indicator = (255, 0, 0) if ill else (0, 255, 0) # 绿色健康, 红色有病
 
     # 将输出图像染色
     width, height = ventricle_image.size
@@ -106,7 +112,7 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     ventricle_image.paste(original_image, (0, 0), original_image)
     skull_image.paste(original_image, (0, 0), original_image)
     print("******叠加成功******")
-    return ventricle_image, skull_image, dagnosis
+    return ventricle_image, skull_image, diagnosis
 
 
 with gr.Blocks() as demo:
