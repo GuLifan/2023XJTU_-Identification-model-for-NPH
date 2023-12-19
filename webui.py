@@ -5,8 +5,13 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from unet.unet_model import UNet
-from config.train_params import THRESHOLD
 from utils.doctor import tell_evans, doctor
+
+try:
+    from config.train_params import THRESHOLD
+except:
+    THRESHOLD = 0.5
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ventricle_unet = UNet(n_channels=1, n_classes=1)
@@ -82,7 +87,7 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     ill_percent = tell_ill(ventricle_img, ventricle_img)
     diagnosis = tell_diagnosis(ill_percent)
     indicator = (0, 255, 0) if ill_percent < 0.5 else (255, 0, 0)  # 绿色健康, 红色有病
-    
+
     # 完成诊断函数后取消下面这段的注释
     # evans_index = tell_evans(ventricle_img, skull_img)
     # ill, diagnosis = doctor(evans_index, input_age, input_BMI, input_gender)
@@ -99,7 +104,7 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
             # 如果像素是黑色，则将其改为指示色
             if r == 0 and g == 0 and b == 0:
                 ventricle_image.putpixel((x, y), indicator)
-    # skull            
+    # skull
     for x in range(width):
         for y in range(height):
             # 获取像素的RGB值
