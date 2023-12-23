@@ -83,16 +83,12 @@ def diagnose(input_img, input_age, input_BMI, input_gender):
     skull_image = Image.fromarray(skull_img)
     skull_image = skull_image.convert("RGB")
 
-    # 完成诊断函数后把下面这段删掉
-    ill_percent = tell_ill(ventricle_img, ventricle_img)
-    diagnosis = tell_diagnosis(ill_percent)
-    indicator = (0, 255, 0) if ill_percent < 0.5 else (255, 0, 0)  # 绿色健康, 红色有病
-
     # 完成诊断函数后取消下面这段的注释
-    # evans_index = tell_evans(ventricle_img, skull_img)
-    # ill, diagnosis = doctor(evans_index, input_age, input_BMI, input_gender)
-    # indicator = (255, 0, 0) if ill else (0, 255, 0) # 绿色健康, 红色有病
-
+    evans_index = tell_evans(ventricle_img, skull_img)
+    ill, diagnosis = doctor(evans_index, input_age, input_BMI, input_gender)
+    print(f"***evans: {evans_index}")
+    indicator = (255, 0, 0) if ill else (0, 255, 0) # 绿色健康, 红色有病
+    
     # 将输出图像染色
     width, height = ventricle_image.size
     # 遍历图像的每个像素
@@ -175,3 +171,5 @@ with gr.Blocks() as demo:
 
 if __name__ == "__main__":
     demo.launch()
+
+# 在上述代码中应如何修改
