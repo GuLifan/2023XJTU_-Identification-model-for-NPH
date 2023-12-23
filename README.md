@@ -50,4 +50,4 @@
 
 ## developer's message
 
-关于evans指数和诊断意见的函数我放在`./utils/doctor.py`里了, 里面声明了`tell_evans()`和`doctor()`两个函数作为WebUI的调用接口, 只需要把你的代码fit in就行了😘
+关于evans指数的测量已经由[@hbx](https://github.com/root-hbx)完成了, 你们可以增加基于evans指数和体重, 年龄, BMI等的诊断报告😘
