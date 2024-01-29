@@ -235,7 +235,7 @@ with gr.Blocks(title="UNet颅内影像识别") as demo:
             input_doctor (str): 医生意见
 
         Returns:
-            Dict: 一系列更新Gradio组建的命令
+            Dict: 一系列更新Gradio组件的命令
         """
         if input_img is not None and input_file is None:
             # 仅上传图片时
