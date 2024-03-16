@@ -4,7 +4,7 @@ from PIL import Image
 import torch
 import numpy as np
 from unet.unet_model import UNet
-from utils.doctor import tell_evans, doctor
+from utils.doctor import tell_evans, doctor, nii_file_slicer
 
 try:
     from config.train_params import THRESHOLD
@@ -154,7 +154,9 @@ input_img = gr.Image(
 )
 input_file = gr.File(label="患者颅内影像文件")
 input_name = gr.Textbox(value="示例", label="患者姓名", interactive=True)
-input_age = gr.Number(minimum=0, maximum=100, value=20, label="患者年龄", interactive=True)
+input_age = gr.Number(
+    minimum=0, maximum=100, value=20, label="患者年龄", interactive=True
+)
 input_stature = gr.Number(
     minimum=0, maximum=250, value=170, label="患者身高(cm)", interactive=True
 )
@@ -290,10 +292,58 @@ with gr.Blocks(title="UNet颅内影像识别") as demo:
             #             sliced_img, input_age, input_stature, input_weight, input_gender
             #         )
             # 用诊断结果做些什么
-            pass
+            best_evans_index = 0
+            best_ventricle_img = None
+            best_skull_img = None
+            best_diagnose_result = None
+            best_ventricle_len = None
+            best_skull_len = None
+            for sliced_img in nii_file_slicer(input_file):
+                (
+                    cur_ventricle_img,
+                    cur_skull_img,
+                    cur_diagnose_result,
+                    cur_evans_index,
+                    cur_ventricle_len,
+                    cur_skull_len,
+                ) = diagnose(
+                    sliced_img, input_age, input_stature, input_weight, input_gender
+                )
+                if cur_evans_index > best_evans_index:
+                    best_evans_index = cur_evans_index
+                    best_ventricle_img = cur_ventricle_img
+                    best_skull_img = cur_skull_img
+                    best_diagnose_result = cur_diagnose_result
+                    best_ventricle_len = cur_ventricle_len
+                    best_skull_len = cur_skull_len
+
+            md_text = MD_TEMPLATE.format(
+                name=input_name,
+                age=input_age,
+                stature=input_stature,
+                weight=input_weight,
+                gender=input_gender,
+                evans_index=best_evans_index,
+                ventricle_len=best_ventricle_len,
+                skull_len=best_skull_len,
+                ai_diagnosis=best_diagnose_result,
+                doc_opinion=input_doctor,
+            )
+
+            return {
+                output_panel: gr.update(visible=True),
+                output_img_ventricle: best_ventricle_img,
+                output_img_skull: best_skull_img,
+                output_diagnosis: best_diagnose_result,
+                report: gr.update(value=md_text),
+                error_box: gr.update(value="", visible=False),
+            }
+
         else:
             # 不合法的输入
-            return {error_box: gr.update(value="请上传图片或文件二者之一", visible=True)}
+            return {
+                error_box: gr.update(value="请上传图片或文件二者之一", visible=True)
+            }
 
     diagnose_btn.click(
         fn=content_wrapper,
